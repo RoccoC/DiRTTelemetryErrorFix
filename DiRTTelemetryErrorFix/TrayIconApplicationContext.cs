@@ -1,15 +1,13 @@
-﻿using EasyHook;
+﻿using DiRTTelemetryErrorFix.Config;
+using EasyHook;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Configuration;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using WinSockHook;
 
@@ -23,6 +21,7 @@ namespace DiRTTelemetryErrorFix
         private List<String> monitoredProcesses = new List<string>();
         private string currentProcessName;
         private int currentProcessId;
+        Logger log;
 
         public TrayIconApplicationContext()
         {
@@ -32,6 +31,8 @@ namespace DiRTTelemetryErrorFix
 
         private void InitializeComponents()
         {
+            this.log = Logger.Get(Properties.Resources.ApplicationName);
+
             TrayIcon = new NotifyIcon();
             TrayIcon.Text = Properties.Resources.ApplicationName;
             TrayIcon.Icon = Properties.Resources.TrayIcon;
@@ -51,11 +52,13 @@ namespace DiRTTelemetryErrorFix
             TrayIcon.ContextMenuStrip = TrayIconContextMenu;
             TrayIcon.Visible = true;
 
-            // start process monitor timer
-            this.initMonitor();
+            // start process monitor worker
+            BackgroundWorker worker = new BackgroundWorker();
+            worker.DoWork += new DoWorkEventHandler(this.Worker_DoWork);
+            worker.RunWorkerAsync();
         }
 
-        private void initMonitor()
+        private void Worker_DoWork(object sender, EventArgs e)
         {
             this.loadMonitoredProcesses();
 
@@ -83,8 +86,8 @@ namespace DiRTTelemetryErrorFix
 
             if (this.currentProcessId == -1)
             {
-                TrayIcon.ShowBalloonTip(0, Properties.Resources.ApplicationName, "No compatible processes running. App will close.", ToolTipIcon.Warning);
-                Console.WriteLine(String.Format("No compatible processes running. App will close."));
+                TrayIcon.ShowBalloonTip(0, Properties.Resources.ApplicationName, Properties.Resources.NoRunningProcessesMsg, ToolTipIcon.Warning);
+                this.log.LogInfo(Properties.Resources.NoRunningProcessesMsg);
                 Application.Exit();
                 return;
             }
@@ -99,7 +102,7 @@ namespace DiRTTelemetryErrorFix
             string channelName = null;
             string hookAssyPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "WinSockHook.dll");
             RemoteHooking.IpcCreateServer<HookCallbackHandler>(ref channelName, System.Runtime.Remoting.WellKnownObjectMode.Singleton);
-            RemoteHooking.Inject(processId, InjectionOptions.DoNotRequireStrongName, hookAssyPath, hookAssyPath, new Object[] { channelName, processId });
+            RemoteHooking.Inject(processId, InjectionOptions.DoNotRequireStrongName, hookAssyPath, hookAssyPath, new Object[] { channelName, processId, Properties.Resources.ApplicationName });
 
             // wait for host process termination
             try
@@ -113,9 +116,9 @@ namespace DiRTTelemetryErrorFix
             {
                 // if process is no longer running, GetProcessById throws
             }
-            string tipText = String.Format("Process {0} has closed. App will close.", this.currentProcessName);
-            TrayIcon.ShowBalloonTip(0, Properties.Resources.ApplicationName, tipText, ToolTipIcon.Warning);
-            Console.WriteLine(String.Format(tipText));
+            string tipText = String.Format(Properties.Resources.ProcessClosedMsg, this.currentProcessName);
+            TrayIcon.ShowBalloonTip(0, Properties.Resources.ApplicationName, tipText, ToolTipIcon.Info);
+            this.log.LogInfo(tipText);
             Application.Exit();
         }
 
@@ -145,6 +148,7 @@ namespace DiRTTelemetryErrorFix
             base.Dispose(disposing);
             TrayIcon.Visible = false;
             TrayIcon.Dispose();
+            Application.Exit();
         }
 
     }

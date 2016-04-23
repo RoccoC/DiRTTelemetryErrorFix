@@ -79,6 +79,24 @@ namespace DiRTTelemetryErrorFix.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not find any running DiRT processes. Closing..
+        /// </summary>
+        internal static string NoRunningProcessesMsg {
+            get {
+                return ResourceManager.GetString("NoRunningProcessesMsg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Process {0} has closed. App will close..
+        /// </summary>
+        internal static string ProcessClosedMsg {
+            get {
+                return ResourceManager.GetString("ProcessClosedMsg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
         internal static System.Drawing.Icon TrayIcon {

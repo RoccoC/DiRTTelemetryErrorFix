@@ -12,6 +12,7 @@ namespace WinSockHook
         private IHookCallbackHandler handler;
         private LocalHook sendToLocalHook;
         private string processName;
+        private string applicationName;
 
         [DllImport("ws2_32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         public static extern int sendto(IntPtr Socket, IntPtr buff, int len, SendDataFlags flags, ref SockAddr To, int tomlen);
@@ -23,30 +24,31 @@ namespace WinSockHook
         public delegate int SendToDelegate(IntPtr Socket, IntPtr buff, int len, SendDataFlags flags, ref SockAddr To, int tomlen);
 
 
-        public Main(RemoteHooking.IContext context, string channelName, int processId)
+        public Main(RemoteHooking.IContext context, string channelName, int processId, string applicationName)
         {
             try
             {
                 this.handler = RemoteHooking.IpcConnectClient<HookCallbackHandler>(channelName);
                 this.processName = Process.GetProcessById(processId).ProcessName;
+                this.applicationName = applicationName;
             }
             catch (Exception exception)
             {
-                this.handler.OnError(this.processName, exception);
+                this.handler.OnError(this.applicationName, this.processName, exception);
             }
         } 
 
-        public void Run(RemoteHooking.IContext context, string channelName, int processId)
+        public void Run(RemoteHooking.IContext context, string channelName, int processId, string applicationName)
         {
             try
             {
                 this.sendToLocalHook = LocalHook.Create(LocalHook.GetProcAddress("ws2_32.dll", "sendto"), new SendToDelegate(this.SendToHook), this);
                 this.sendToLocalHook.ThreadACL.SetExclusiveACL(new int[] { 0 });
-                this.handler.OnHookInstalled(this.processName);
+                this.handler.OnHookInstalled(this.applicationName, this.processName);
             }
             catch (Exception exception)
             {
-                this.handler.OnError(this.processName, exception);
+                this.handler.OnError(this.applicationName, this.processName, exception);
             }
 
             // wait for host process termination
@@ -60,7 +62,7 @@ namespace WinSockHook
             }
             catch (Exception exception)
             {
-                this.handler.OnError(this.processName, exception);
+                this.handler.OnError(this.applicationName, this.processName, exception);
             }
         }
 
@@ -77,7 +79,7 @@ namespace WinSockHook
                     int errCode = Marshal.GetLastWin32Error();
                     if (errCode == (int)WSA_ERROR.WSAENOTSOCK) {
                         // swallow the original eeror and spoof a good return code
-                        this.handler.OnErrorCaptured("sendto", this.processName, errCode);
+                        this.handler.OnErrorCaptured(this.applicationName, "sendto", this.processName, errCode);
                         WSASetLastError(0);
                         returnCode = 0;
                     }
@@ -85,7 +87,7 @@ namespace WinSockHook
             }
             catch (Exception exception)
             {
-                this.handler.OnError(this.processName, exception);
+                this.handler.OnError(this.applicationName, this.processName, exception);
             }
 
             return returnCode;
@@ -94,7 +96,7 @@ namespace WinSockHook
         public void Dispose()
         {
             this.sendToLocalHook.Dispose();
-            this.handler.OnHookUninstalled(this.processName);
+            this.handler.OnHookUninstalled(this.applicationName, this.processName);
         }
     }
 }

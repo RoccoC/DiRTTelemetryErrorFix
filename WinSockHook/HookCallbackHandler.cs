@@ -4,34 +4,39 @@ namespace WinSockHook
 {
     public class HookCallbackHandler : MarshalByRefObject, IHookCallbackHandler
     {
-        public void OnHookInstalled(string processName)
+        public void OnHookInstalled(string appName, string processName)
         {
-            // TODO: log
-            Console.WriteLine(String.Format("OnHookInstalled for process {0}", processName));
+            string msg = String.Format("Hook installed for process {0}.", processName);
+            Logger.Get(appName).LogInfo(msg);
+            Console.WriteLine(msg);
         }
 
-        public void OnHookUninstalled(string processName)
+        public void OnHookUninstalled(string appName, string processName)
         {
-            // TODO: log
-            Console.WriteLine(String.Format("OnHookUninstalled for process {0}", processName));
+            string msg = String.Format("Hook uninstalled for process {0}.", processName);
+            Logger.Get(appName).LogInfo(msg);
+            Console.WriteLine(msg);
         }
 
-        public void OnHookInvocation(string methodName, string processName)
+        public void OnHookInvocation(string appName, string methodName, string processName)
         {
-            // TODO: log
-            Console.WriteLine(String.Format("OnHookInvocation for method {0} and process {1}", methodName, processName));
+            string msg = String.Format("Hook invoked for process {0} for method {1}.", processName, methodName);
+            Logger.Get(appName).LogInfo(msg);
+            Console.WriteLine(msg);
         }
 
-        public void OnErrorCaptured(string methodName, string processName, int errorCode)
+        public void OnErrorCaptured(string appName, string methodName, string processName, int errorCode)
         {
-            // TODO: log
-            Console.WriteLine(String.Format("OnErrorCaptured for method {0} and process {1}; error code: {2}", methodName, processName, errorCode));
+            string msg = String.Format("Error captured process {0} for method {1}. Error code: {2}.", processName, methodName, errorCode);
+            Logger.Get(appName).LogInfo(msg);
+            Console.WriteLine(msg);
         }
 
-        public void OnError(string processName, Exception exception)
+        public void OnError(string appName, string processName, Exception exception)
         {
-            // TODO: log
-            Console.WriteLine(String.Format("OnError {0}: {1}", processName, exception.Message));
+            string msg = String.Format("An exception was caught for process {0}: {1}.", processName, exception.Message);
+            Logger.Get(appName).LogError(msg);
+            Console.WriteLine(msg);
         }
     }
 }

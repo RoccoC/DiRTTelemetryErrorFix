@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Configuration;
+﻿using System.Configuration;
 
-namespace DiRTTelemetryErrorFix
+namespace DiRTTelemetryErrorFix.Config
 {
     public class MonitoredProcessesConfigurationSection : ConfigurationSection
     {

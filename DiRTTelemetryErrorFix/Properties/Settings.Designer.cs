@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace DiRTTelemetryErrorFix.Properties
+namespace DiRTTelemetryErrorFixConfig.Properties
 {
 
 
