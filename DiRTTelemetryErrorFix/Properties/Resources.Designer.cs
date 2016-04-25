@@ -88,7 +88,7 @@ namespace DiRTTelemetryErrorFix.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Process {0} has closed. App will close..
+        ///   Looks up a localized string similar to Process {0} has closed. Closing..
         /// </summary>
         internal static string ProcessClosedMsg {
             get {
