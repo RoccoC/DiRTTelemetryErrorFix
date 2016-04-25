@@ -110,6 +110,7 @@ namespace DiRTTelemetryErrorFix
             {
                 // if process is no longer running, GetProcessById throws
             }
+
             string tipText = String.Format(Properties.Resources.ProcessClosedMsg, this.currentProcessName);
             TrayIcon.ShowBalloonTip(0, Properties.Resources.ApplicationName, tipText, ToolTipIcon.Info);
             this.log.LogInfo(tipText);
