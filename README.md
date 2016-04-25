@@ -17,7 +17,7 @@ This fix is packaged in the form of a simple Windows System Tray app which check
 
 Installation
 ------------
-1. Download the ZIP file from found [here](https://github.com/RoccoC/DiRTTelemetryErrorFix/blob/master/bin/DiRTTelemetryErrorFix_Release.zip?raw=true).
+1. Download the ZIP file using [this link](https://github.com/RoccoC/DiRTTelemetryErrorFix/blob/master/bin/DiRTTelemetryErrorFix_Release.zip?raw=true).
 2. Extract the ZIP file to a folder of your choosing.
 3. Open the folder you created in teh previous step, and then run DiRTTelemetryErrorFix.exe.
 4. Within 10 seconds of starting DiRTTelemetryErrorFix.exe, start DiRT Showdown, DiRT 2, or DiRT 3.
