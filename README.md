@@ -3,7 +3,7 @@ A hook/detour written in C# for the Windows ws2_32 lib to fix the 10038 socket e
 
 ![](https://raw.githubusercontent.com/RoccoC/DiRTTelemetryErrorFix/master/error.png "DiRT Telemetry Error")
 
-**Thanks to SimXperience forum member Carsten Gottschling for creating the original detour to fix this issue.** **The idea for this project is based on his work.**
+**_Thanks to SimXperience forum member Carsten Gottschling for creating the original detour to fix this issue. The idea for this project is based on his work._**
 
 Background
 ----------
