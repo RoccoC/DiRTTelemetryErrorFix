@@ -19,12 +19,13 @@ Installation
 ------------
 1. Download the ZIP file using [this link](https://github.com/RoccoC/DiRTTelemetryErrorFix/blob/master/bin/DiRTTelemetryErrorFix_Release.zip?raw=true).
 2. Extract the ZIP file to a folder of your choosing.
-3. Open the folder you created in teh previous step, and then run DiRTTelemetryErrorFix.exe.
+3. Open the folder you created in the previous step, and then run DiRTTelemetryErrorFix.exe.
 4. Within 10 seconds of starting DiRTTelemetryErrorFix.exe, start DiRT Showdown, DiRT 2, or DiRT 3.
 5. DiRTTelemetryErrorFix.exe will automatically hook into the game process and will suppress the WinSock error.
 
 Notes
 -----
+* Ideally this app should be automatically started via a pre or post-launch script if possible.
 * DiRTTelemetryErrorFix.exe is configured to self-close if a running DiRT process is not found within ten seconds of starting.
 * Valid process names are configurable and can be set in the application's ([config file](https://github.com/RoccoC/DiRTTelemetryErrorFix/blob/master/src/DiRTTelemetryErrorFix/App.config)).
 * The fix will only hook calls made from the active DiRT process, and so any other calls to WinSock sendto from other applications are unaffected.
