@@ -1,6 +1,8 @@
 # DiRTTelemetryErrorFix
 A hook/detour written in C# for the Windows ws2_32 lib to fix the 10038 socket error when telemetry is enabled in DiRT 2 and DiRT Showdown.
 
+![](https://raw.githubusercontent.com/RoccoC/DiRTTelemetryErrorFix/master/error.png "DiRT Telemetry Error")
+
 Background
 ----------
 If you've tried running DiRT Showdown or DiRT 2/3 with telemetry output enabled (e.g. for motion, SimVibe, etc), chances are that you have seen the game crash with a Windows Socket Error 10038 at race end. This bug was introduced with a release in 2011, and according to multiple forum posts, it doesn't look like it's something that Codemasters will ever fix (see [HERE](http://forums.codemasters.com/discussion/183/dirt-3-telemetry-and-motion-simulator-bug)). This bug essentially makes the game unplayable with telemetry output enabled.
