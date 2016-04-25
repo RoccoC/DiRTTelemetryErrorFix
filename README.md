@@ -23,6 +23,7 @@ Notes
 -----
 * DiRTTelemetryErrorFix.exe is configured to self-close if a running DiRT process is not found within ten seconds of starting.
 * Valid process names are configurable and can be set in the application's ([config file](https://github.com/RoccoC/DiRTTelemetryErrorFix/blob/master/src/DiRTTelemetryErrorFix/App.config)).
+* The fix will only hook calls made from the active DiRT process, and so any other calls to WinSock sendto from other applications are unaffected.
 * Fix has been tested on Windows 8.1 and Windows 10.
 * The application will self-close within 30 seconds of exiting the DiRT game.
 
