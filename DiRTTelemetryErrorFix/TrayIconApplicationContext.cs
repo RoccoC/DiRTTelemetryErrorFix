@@ -16,12 +16,11 @@ namespace DiRTTelemetryErrorFix
     class TrayIconApplicationContext : ApplicationContext
     {
         private NotifyIcon TrayIcon;
-        private ContextMenuStrip TrayIconContextMenu;
-        private ToolStripMenuItem CloseMenuItem;
         private List<String> monitoredProcesses = new List<string>();
         private string currentProcessName;
         private int currentProcessId;
         Logger log;
+        private const string HOOK_DLL = "WinSockHook.dll";
 
         public TrayIconApplicationContext()
         {
@@ -33,23 +32,18 @@ namespace DiRTTelemetryErrorFix
         {
             this.log = Logger.Get(Properties.Resources.ApplicationName);
 
-            TrayIcon = new NotifyIcon();
-            TrayIcon.Text = Properties.Resources.ApplicationName;
-            TrayIcon.Icon = Properties.Resources.TrayIcon;
-            TrayIconContextMenu = new ContextMenuStrip();
-            CloseMenuItem = new ToolStripMenuItem();
-            TrayIconContextMenu.SuspendLayout();
+            this.TrayIcon = new NotifyIcon();
+            this.TrayIcon.Text = Properties.Resources.ApplicationName;
+            this.TrayIcon.Icon = Properties.Resources.TrayIcon;
 
-            // create simple context menu
-            this.TrayIconContextMenu.Items.AddRange(new ToolStripItem[] { this.CloseMenuItem });
-            this.TrayIconContextMenu.Name = "TrayIconContextMenu";
-            // add close menu item
-            this.CloseMenuItem.Name = "CloseMenuItem";
-            this.CloseMenuItem.Text = Properties.Resources.CloseText;
-            this.CloseMenuItem.Click += new EventHandler(this.CloseMenuItem_Click);
-
-            TrayIconContextMenu.ResumeLayout(false);
-            TrayIcon.ContextMenuStrip = TrayIconContextMenu;
+            // create simple context menu with a "close" menu item
+            this.TrayIcon.ContextMenuStrip = new ContextMenuStrip();
+            this.TrayIcon.ContextMenuStrip.Items.AddRange(
+                new ToolStripItem[] {
+                    new ToolStripMenuItem(Properties.Resources.CloseText, null, this.CloseMenuItem_Click)
+                }
+            );
+           
             TrayIcon.Visible = true;
 
             // start process monitor worker
@@ -100,7 +94,7 @@ namespace DiRTTelemetryErrorFix
         private void hookProcess(int processId)
         {
             string channelName = null;
-            string hookAssyPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "WinSockHook.dll");
+            string hookAssyPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), HOOK_DLL);
             RemoteHooking.IpcCreateServer<HookCallbackHandler>(ref channelName, System.Runtime.Remoting.WellKnownObjectMode.Singleton);
             RemoteHooking.Inject(processId, InjectionOptions.DoNotRequireStrongName, hookAssyPath, hookAssyPath, new Object[] { channelName, processId, Properties.Resources.ApplicationName });
 
@@ -124,7 +118,7 @@ namespace DiRTTelemetryErrorFix
 
         private void loadMonitoredProcesses()
         {
-            // get list of processes to look for
+            // get list of processes to look for from the app config
             MonitoredProcessesConfigurationSection monitoredProcessesSection = ConfigurationManager.GetSection("MonitoredProcessesSection") as MonitoredProcessesConfigurationSection;
             MonitoredProcessCollection monitoredProcesses = monitoredProcessesSection.MonitoredProcesses;
             foreach (MonitoredProcessElement process in monitoredProcesses)
