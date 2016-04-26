@@ -1,5 +1,5 @@
 # DiRTTelemetryErrorFix
-A hook/detour written in C# for the Windows ws2_32 lib to fix the 10038 socket error when telemetry is enabled in DiRT 2 and DiRT Showdown.
+A hook/detour written in C# for the Windows ws2_32 lib to fix the 10038 socket error when telemetry is enabled in DiRT 3 and DiRT Showdown.
 
 ![](https://raw.githubusercontent.com/RoccoC/DiRTTelemetryErrorFix/master/error.png "DiRT Telemetry Error")
 
@@ -7,7 +7,7 @@ A hook/detour written in C# for the Windows ws2_32 lib to fix the 10038 socket e
 
 Background
 ----------
-If you've tried running DiRT Showdown or DiRT 2/3 with telemetry output enabled (e.g. for motion, SimVibe, etc), chances are that you have seen the game crash with a Windows Socket Error 10038 at race end. This bug was introduced with a release in 2011, and according to multiple forum posts, it doesn't look like it's something that Codemasters will ever fix (see [HERE](http://forums.codemasters.com/discussion/183/dirt-3-telemetry-and-motion-simulator-bug)). My understanding is the error is caused by the game trying send motion data to a closed socket, hence the unhandled exception. This bug essentially makes the game unplayable with telemetry output enabled, and is a shame that Codies doesn't plan on creating what I think would be a very simple patch to fix this.
+If you've tried running DiRT Showdown or DiRT 3 with telemetry output enabled (e.g. for motion, SimVibe, etc), chances are that you have seen the game crash with a Windows Socket Error 10038 at race end. This bug was introduced with a release in 2011, and according to multiple forum posts, it doesn't look like it's something that Codemasters will ever fix (see [HERE](http://forums.codemasters.com/discussion/183/dirt-3-telemetry-and-motion-simulator-bug)). My understanding is the error is caused by the game trying send motion data to a closed socket, hence the unhandled exception. This bug essentially makes the game unplayable with telemetry output enabled, and is a shame that Codies doesn't plan on creating what I think would be a very simple patch to fix this.
 
 The Fix
 -------
@@ -20,7 +20,7 @@ Installation
 1. Download the ZIP file using [this link](https://github.com/RoccoC/DiRTTelemetryErrorFix/blob/master/bin/DiRTTelemetryErrorFix_Release.zip?raw=true).
 2. Extract the ZIP file to a folder of your choosing.
 3. Open the folder you created in the previous step, and then run DiRTTelemetryErrorFix.exe.
-4. Within 10 seconds of starting DiRTTelemetryErrorFix.exe, start DiRT Showdown, DiRT 2, or DiRT 3.
+4. Within 10 seconds of starting DiRTTelemetryErrorFix.exe, start DiRT Showdown or DiRT 3.
 5. DiRTTelemetryErrorFix.exe will automatically hook into the game process and will suppress the WinSock error.
 
 Notes
