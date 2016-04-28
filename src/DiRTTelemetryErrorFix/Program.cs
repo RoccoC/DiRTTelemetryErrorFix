@@ -11,7 +11,15 @@ namespace DiRTTelemetryErrorFix
         [STAThread]
         static void Main()
         {
-            Application.Run(new TrayIconApplicationContext());
+            bool silent = false;
+            foreach(String arg in Environment.GetCommandLineArgs())
+            {
+                if (arg.Equals("-silent"))
+                {
+                    silent = true;
+                }
+            }
+            Application.Run(new TrayIconApplicationContext(silent));
         }
     }
 }

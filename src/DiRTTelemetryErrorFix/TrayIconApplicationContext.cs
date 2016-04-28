@@ -20,10 +20,12 @@ namespace DiRTTelemetryErrorFix
         private string currentProcessName;
         private int currentProcessId;
         Logger log;
+        private bool silent = false;
         private const string HOOK_DLL = "WinSockHook.dll";
 
-        public TrayIconApplicationContext()
+        public TrayIconApplicationContext(bool silent)
         {
+            this.silent = silent;
             Application.ApplicationExit += new EventHandler(this.OnApplicationExit);
             InitializeComponents();
         }
@@ -80,14 +82,20 @@ namespace DiRTTelemetryErrorFix
 
             if (this.currentProcessId == -1)
             {
-                TrayIcon.ShowBalloonTip(0, Properties.Resources.ApplicationName, Properties.Resources.NoRunningProcessesMsg, ToolTipIcon.Warning);
+                if (!this.silent)
+                {
+                    TrayIcon.ShowBalloonTip(0, Properties.Resources.ApplicationName, Properties.Resources.NoRunningProcessesMsg, ToolTipIcon.Warning);
+                }
                 this.log.LogInfo(Properties.Resources.NoRunningProcessesMsg);
                 Application.Exit();
                 return;
             }
 
-            string tipText = String.Format(Properties.Resources.TrayIconBalloonTipFormatString, Properties.Resources.ApplicationName, this.currentProcessName);
-            TrayIcon.ShowBalloonTip(0, Properties.Resources.ApplicationName, tipText, ToolTipIcon.Info);
+            if (!this.silent)
+            {
+                string tipText = String.Format(Properties.Resources.TrayIconBalloonTipFormatString, Properties.Resources.ApplicationName, this.currentProcessName);
+                TrayIcon.ShowBalloonTip(0, Properties.Resources.ApplicationName, tipText, ToolTipIcon.Info);
+            }
             this.hookProcess(this.currentProcessId);
         }
 
@@ -112,7 +120,10 @@ namespace DiRTTelemetryErrorFix
             }
 
             string tipText = String.Format(Properties.Resources.ProcessClosedMsg, this.currentProcessName);
-            TrayIcon.ShowBalloonTip(0, Properties.Resources.ApplicationName, tipText, ToolTipIcon.Info);
+            if (!this.silent)
+            {
+                TrayIcon.ShowBalloonTip(0, Properties.Resources.ApplicationName, tipText, ToolTipIcon.Info);
+            }
             this.log.LogInfo(tipText);
             Application.Exit();
         }
