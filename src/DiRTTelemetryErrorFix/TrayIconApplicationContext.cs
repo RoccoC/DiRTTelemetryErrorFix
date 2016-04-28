@@ -22,6 +22,7 @@ namespace DiRTTelemetryErrorFix
         Logger log;
         private bool silent = false;
         private const string HOOK_DLL = "WinSockHook.dll";
+        private int timeout = 10;
 
         public TrayIconApplicationContext(bool silent)
         {
@@ -56,12 +57,12 @@ namespace DiRTTelemetryErrorFix
 
         private void Worker_DoWork(object sender, EventArgs e)
         {
-            this.loadMonitoredProcesses();
+            this.loadAppConfig();
 
             // check for existence of one of the processes, exit if none exist after 10 sec of waiting
             this.currentProcessId = -1;
             this.currentProcessName = null;
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < this.timeout; i++)
             {
                 this.monitoredProcesses.ForEach(process =>
                 {
@@ -128,8 +129,11 @@ namespace DiRTTelemetryErrorFix
             Application.Exit();
         }
 
-        private void loadMonitoredProcesses()
+        private void loadAppConfig()
         {
+            // get timeout
+            this.timeout = int.Parse(ConfigurationManager.AppSettings.Get("timeout"));
+
             // get list of processes to look for from the app config
             MonitoredProcessesConfigurationSection monitoredProcessesSection = ConfigurationManager.GetSection("MonitoredProcessesSection") as MonitoredProcessesConfigurationSection;
             MonitoredProcessCollection monitoredProcesses = monitoredProcessesSection.MonitoredProcesses;
